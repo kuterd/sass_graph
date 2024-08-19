@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .node rect {
+            stroke: #333;
+            fill: white;
+        }
+
+        .node text {
+            text-anchor: start;
+        }
+
+        .edgePath path {
+            stroke: #333;
+            fill: none;
+            stroke-width: 1.5px;
+        }
+
+        .node-html-container {
+            background-color: #f0f0f0;
+            border: 1px solid #999;
+            border-radius: 5px;
+            padding: 5px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+    <!-- Embed JSON data in a script tag -->
+    <script type="application/json" id="json-data">
+        {{json_data}}
+    </script>
+</head>
+<body>
+
+    <svg class="canvas"></svg>
+
+    <script>
+
+        var jsonDataElement = document.getElementById('json-data');
+        var data = JSON.parse(jsonDataElement.textContent);
+        let nodes = data["nodes"];
+
+        const svg = d3.select(".canvas");
+
+        const width = Math.max(500, window.innerWidth);
+        const height = Math.max(500, window.innerHeight);
+
+        svg.attr("width", width)
+           .attr("height", height);
+
+        const container = svg.append("g");
+
+        const zoom = d3.zoom()
+            .scaleExtent([0.01, 30]) // Zoom scale range
+            .on("zoom", (event) => {
+                container.attr("transform", event.transform);
+            });
+        svg.call(zoom);
+
+        var g = new dagreD3.graphlib.Graph().setGraph({}).setDefaultEdgeLabel(function () { return {} });
+        for (let name in nodes) {
+          g.setNode(name, {
+              labelType: "html",
+              label: nodes[name]["lines"].join("<br>"),
+          });
+        }
+       for (let name in nodes) {
+          nodes[name]["edges"].forEach( function(trg) {
+            console.log("edge", name, trg);
+            g.setEdge(name, trg);
+          });
+        }
+        var render = new dagreD3.render();
+        render(container, g);
+    </script>
+</body>
+</html>
