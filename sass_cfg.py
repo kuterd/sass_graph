@@ -1,6 +1,5 @@
 """
 Generate Control Flow Graph from SASS dump of a program.
-TODO: Handle analysing multiple functions.
 """
 
 import subprocess
@@ -177,10 +176,20 @@ def generate_cfgs(sections):
         for line in section[section.index(function_name + ":") + 2 :]:
             if "/*" in line:
                 inst = line[line.index("*/") + 2 :].strip()
-                parsed = InstructionParser.parseInstruction(inst)
-                current_block.lines.append(highligher.highlight(parsed))
-                if parsed.base_name == "BRA" and isinstance(
-                    parsed.operands[0], LabelOperand
+
+                parsed = None
+                try:
+                    parsed = InstructionParser.parseInstruction(inst)
+                    current_block.lines.append(highligher.highlight(parsed))
+                except Exception:
+                    pass
+                if not parsed:
+                    current_block.lines.append(inst)
+
+                if (
+                    parsed
+                    and parsed.base_name == "BRA"
+                    and isinstance(parsed.operands[0], LabelOperand)
                 ):
                     target_name = parsed.operands[0].label_name
                     current_block.target_names.append(target_name)
