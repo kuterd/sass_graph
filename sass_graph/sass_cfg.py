@@ -43,7 +43,8 @@ class CFGGraph:
         for node in self.nodes.values():
             encoded_graph["nodes"][node.name] = node.encode()
 
-        file_loader = jinja2.FileSystemLoader("templates")
+        file_loader = jinja2.PackageLoader("sass_graph", "templates")
+
         env = jinja2.Environment(loader=file_loader)
 
         template = env.get_template("template.html")
