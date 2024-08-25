@@ -10,4 +10,5 @@ setup(
     author_email="kuterdinel@gmail.com",
     description="A tool for visualizing NVIDIA Sass assembly files.",
     long_description=open("README.md").read(),
+    install_requires=["Jinja2"],
 )
