@@ -3,7 +3,6 @@ Based on CuAssembler's parser.
 """
 
 import json
-from typing import Union
 import re
 from enum import Enum
 

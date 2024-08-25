@@ -3,8 +3,8 @@ Generate Control Flow Graph from SASS dump of a program.
 """
 
 import subprocess
-from parser import InstructionParser, LabelOperand
-import parser
+from .parser import InstructionParser, LabelOperand
+from . import parser
 import html
 
 import json
