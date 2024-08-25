@@ -1,8 +1,9 @@
-from IPython.display import HTML
 import html
 
 
 def display_cfg(func, width="600px", height="600px"):
+    from IPython.display import HTML
+
     # Define HTML content to be embedded directly within the iframe
     html_content = f"""
     <iframe
